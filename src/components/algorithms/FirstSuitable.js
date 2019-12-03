@@ -2,6 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 //material UI
 import { withStyles } from '@material-ui/core/styles';
+//custom 
+import Canvas from './Canvas';
+
+import { withSnackbar } from 'notistack';
 
 const styles  = {
     listItem: {
@@ -48,8 +52,8 @@ class FirstSuitable extends React.Component {
                 height: canvasHeight
             },
             canvasStyles: {
-                width: this.state.canvasStyles.width * factor,
-                height: this.state.canvasStyles.height * factor
+                width: Math.round(this.state.canvasStyles.width * factor),
+                height: Math.round(this.state.canvasStyles.height * factor)
             },
             details: detailedParts,
             factor
@@ -57,11 +61,13 @@ class FirstSuitable extends React.Component {
     }
 
     startAlgorithm = () => {
+        let startTime = Date.now();
+
         const { canvasStyles, details, factor } = this.state;
         let badDetails = [];
         let topLeftCorner = {
-            x: canvasStyles.width,
-            y: 0
+            x: 0,
+            y: canvasStyles.height
         };
         let bottomRightCorner = {
             x: 0,
@@ -71,104 +77,117 @@ class FirstSuitable extends React.Component {
         let canvases = [{
             details: [],
             width: canvasStyles.width,
-            height: canvasStyles.height
+            height: canvasStyles.height,
+            currentBottomRightCorner: bottomRightCorner,
+            currentTopLeftCorner: topLeftCorner
         }];
+
         let currentCanvas = 0;
+        let isNeedToInit = true;
 
-        details.forEach(detail => {
-            console.log('detail start');
-            let lastCanvasIndex = canvases.length - 1 < 0 ? 0 : canvases.length - 1;
+        details.forEach((detail, index) => {
             do {
-                console.log('while do');
-                if (this.isSuitableForWidth(bottomRightCorner, detail, canvases[currentCanvas])) {
-                    console.log('isSuitableForWidth');
+                if (this.isSuitableForWidth(canvases[currentCanvas].currentBottomRightCorner, detail, canvases[currentCanvas])) {
+                    canvases[currentCanvas].currentBottomRightCorner = {
+                        x: canvases[currentCanvas].currentBottomRightCorner.x + detail.width,
+                        y: canvases[currentCanvas].currentBottomRightCorner.y
+                    };
+
+                    if (isNeedToInit) {
+                        canvases[currentCanvas].currentTopLeftCorner = {
+                            x: canvases[currentCanvas].currentBottomRightCorner.x - detail.width,
+                            y: canvases[currentCanvas].currentBottomRightCorner.y - detail.height
+                        };
+                        isNeedToInit = false;
+                    }
                     canvases[currentCanvas].details.push({
                         point1: {
-                            x: bottomRightCorner.x,
-                            y: bottomRightCorner.y
+                            x: canvases[currentCanvas].currentBottomRightCorner.x - detail.width,
+                            y: canvases[currentCanvas].currentBottomRightCorner.y - detail.height
                         },
                         point2: {
-                            x: bottomRightCorner.x + detail.width,
-                            y: bottomRightCorner.y - detail.height
+                            x: canvases[currentCanvas].currentBottomRightCorner.x,
+                            y: canvases[currentCanvas].currentBottomRightCorner.y
                         }
                     });
-                    bottomRightCorner = {
-                        x: bottomRightCorner.x + detail.width,
-                        y: bottomRightCorner.y
-                    };
-                    topLeftCorner = {
-                        x: bottomRightCorner.x - detail.width,
-                        y: bottomRightCorner.y - detail.height
-                    };
                     break;
-                } else if (this.isSuitableForHeight(topLeftCorner, detail, canvases[currentCanvas])) {
-                    console.log('isSuitableForWidth');
+                } else if (this.isSuitableForHeight(canvases[currentCanvas].currentTopLeftCorner, detail)) {
+
+                    canvases[currentCanvas].currentBottomRightCorner = {
+                        x: canvases[currentCanvas].currentTopLeftCorner.x + detail.width,
+                        y: canvases[currentCanvas].currentTopLeftCorner.y
+                    };
+                    canvases[currentCanvas].currentTopLeftCorner = {
+                        x: canvases[currentCanvas].currentTopLeftCorner.x,
+                        y: canvases[currentCanvas].currentTopLeftCorner.y - detail.height
+                    };
+                    
                     canvases[currentCanvas].details.push({
                         point1: {
-                            x: topLeftCorner.x,
-                            y: topLeftCorner.y
+                            x: canvases[currentCanvas].currentBottomRightCorner.x - detail.width,
+                            y: canvases[currentCanvas].currentBottomRightCorner.y - detail.height
                         },
                         point2: {
-                            x: topLeftCorner.x + detail.width,
-                            y: topLeftCorner.y - detail.height
+                            x: canvases[currentCanvas].currentBottomRightCorner.x,
+                            y: canvases[currentCanvas].currentBottomRightCorner.y
                         }
                     });
-                    bottomRightCorner = {
-                        x: bottomRightCorner.x + detail.width,
-                        y: bottomRightCorner.y
-                    };
-                    topLeftCorner = {
-                        x: bottomRightCorner.x - detail.width,
-                        y: bottomRightCorner.y - detail.height
-                    };
                     break;
                 }
-                if (canvases[lastCanvasIndex].details.length !== 0) {
-                    console.log('bed');
-                    topLeftCorner = {
-                        x: canvasStyles.width,
-                        y: canvasStyles.height
-                    };
-                    bottomRightCorner = {
-                        x: canvasStyles.width,
-                        y: canvasStyles.height
-                    };
+                if (!this.isSuitableForHeight(canvases[currentCanvas].currentTopLeftCorner, detail) ||
+                    !this.isSuitableForWidth(canvases[currentCanvas].currentTopLeftCorner, detail, canvases[currentCanvas])) {
+                    canvases.push({
+                        details: [],
+                        width: canvasStyles.width,
+                        height: canvasStyles.height,
+                        currentBottomRightCorner: bottomRightCorner,
+                        currentTopLeftCorner: topLeftCorner
+                    });
+                    isNeedToInit = true;
                     currentCanvas++;
-                } else {
-                    console.log('add bad details');
-                    badDetails.push({
-                        width: Math.round(detail.width * factor),
-                        height: Math.round(detail.height * factor)
-                    });
-                    break;
+
+                    if (canvases[currentCanvas - 1].details.length === 0) {
+                        badDetails.push({
+                            width: Math.round(detail.width / factor),
+                            height: Math.round(detail.height / factor)
+                        });
+                        currentCanvas--;
+                        return;
+                    }
+                    continue;
                 }
-            } while (true)
+            } while (true);
         });
-        console.log('end');
-        console.log(details);
-        console.log(this.state.factor);
-        console.log(this.state.badDetails);
-        console.log(canvases);
+        let endTime = Date.now();
+        
+        this.setState({
+            ...this.state,
+            canvases: canvases
+        }, () => {
+            this.props.dispatch({
+                type: 'CLOSE_SPINNER'
+            });
+            this.props.enqueueSnackbar(`Время выполнения ${endTime - startTime} мс`, {
+                variant: 'success'
+            });
+        });
     };
 
-    isSuitableForWidth = (bottomRightCorner, detail, canvas) => {
-        return !(bottomRightCorner.x + detail.width > canvas.width);
+    isSuitableForWidth = (bottomRightCorner, detail, canvas) => bottomRightCorner.x + detail.width <= canvas.width;
 
-    };
-
-    isSuitableForHeight = (topLeftCorner, detail) => {
-        return !(topLeftCorner.y - detail.height < 0);
-    };
-
-    resetPoints = () => {
-
-    };
+    isSuitableForHeight = (topLeftCorner, detail) => topLeftCorner.y - detail.height >= 0;
 
     render() {
+        const { canvases } = this.state;
+
         return (
             <>
                 <div ref={this.container}>
-
+                    {canvases.map((canvas, index) => {
+                        return (
+                            <Canvas canvasInfo={canvas} key={index} />
+                        );
+                    })}
                 </div>
             </>
         );
@@ -182,4 +201,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default withStyles(styles)(connect(mapStateToProps)(FirstSuitable));
+export default withStyles(styles)(connect(mapStateToProps)(withSnackbar(FirstSuitable)));

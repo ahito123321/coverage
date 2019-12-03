@@ -2,8 +2,8 @@ const initialStore = {
     details: [{
         id: '1',
         width: '200',
-        height: '100',
-        amount: '3'
+        height: '200',
+        amount: '10'
     }],
     modalStates: {
         addDetail: false
@@ -12,7 +12,7 @@ const initialStore = {
     algorithm: '',
     canvas: {
         width: '500',
-        height: '600'
+        height: '500'
     }
 };
 

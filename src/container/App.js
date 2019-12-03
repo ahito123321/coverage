@@ -23,12 +23,23 @@ export default function App(props) {
     return (
         <div className={classes.root}>
             <Grid container spacing={2}>
-                <Grid container item xs={4} spacing={2}>
-                    <Grid item xs={12}>
-                        <CanvasContainer />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <DetailContainer />
+                <Grid 
+                    item 
+                    xs={4} 
+                >
+                    <Grid 
+                        container  
+                        direction="column"
+                        justify="flex-start"
+                        alignItems="stretch"
+                        spacing={2}
+                    >
+                        <Grid item xs={12}>
+                            <CanvasContainer />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <DetailContainer />
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid item xs={8}>

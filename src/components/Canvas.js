@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PictureInPictureAlt from '@material-ui/icons/PictureInPictureAlt';
 import Button from '@material-ui/core/Button';
-
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import FormControl from '@material-ui/core/FormControl';
-
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
+import LayersClearIcon from '@material-ui/icons/LayersClear';
 
 import { withSnackbar } from 'notistack';
 
@@ -45,12 +44,17 @@ class Canvas extends Component {
             });
             return false;
         }
-        this.props.dispatch({ type: 'SHOW_SPINNER' });
         return true;
     };
 
     algorithmFirstSuitable = () => {
         if (!this.isValidation()) return;
+        if (this.props.algorithm !== '') {
+            this.props.enqueueSnackbar('Очистите плотно!', {
+                variant: 'info'
+            });
+            return;
+        }  
         const { width, height } = this.state;
         this.props.dispatch({ 
             type: 'SHOW_SPINNER',
@@ -60,6 +64,19 @@ class Canvas extends Component {
             }
         });
         this.props.dispatch({ type: 'FIRST_SUITABLE' });
+    };
+
+    algorithmClear = () => {
+        if (this.props.algorithm === '') {
+            this.props.enqueueSnackbar('Полотно уже очищено!', {
+                variant: 'warning'
+            });
+            return;
+        }  
+        this.props.dispatch({ type: 'CLEAR_ALGORITHM' });
+        this.props.enqueueSnackbar('Полотно очищено!', {
+            variant: 'info'
+        });
     };
 
     render() {
@@ -105,6 +122,16 @@ class Canvas extends Component {
                 >
                     Первый подходящий
                 </Button>
+                <Button
+                    variant="contained"
+                    color="default"
+                    onClick={this.algorithmClear}
+                    className={classes.button}
+                    fullWidth
+                    startIcon={<LayersClearIcon />}
+                >
+                    Очистить полотно
+                </Button>
             </>
         );
     }
@@ -113,7 +140,8 @@ class Canvas extends Component {
 const mapStateToProps = state => {
     return {
         details: state.details,
-        canvas: state.canvas
+        canvas: state.canvas,
+        algorithm: state.algorithm
     }
 };
 
