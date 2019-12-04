@@ -34,6 +34,15 @@ class Canvas extends Component {
         this.setState({
             ...this.state,
             [field]: event.target.value
+        }, () => {
+            console.log(this.state);
+            this.props.dispatch({ 
+                type: 'SET_CANVAS',
+                payload: {
+                    width: this.state.width,
+                    height: this.state.height
+                }
+            });
         });
     };
 
