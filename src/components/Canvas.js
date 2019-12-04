@@ -35,7 +35,6 @@ class Canvas extends Component {
             ...this.state,
             [field]: event.target.value
         }, () => {
-            console.log(this.state);
             this.props.dispatch({ 
                 type: 'SET_CANVAS',
                 payload: {
