@@ -9,6 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import LayersClearIcon from '@material-ui/icons/LayersClear';
+import Switch from '@material-ui/core/Switch';
 
 import { withSnackbar } from 'notistack';
 

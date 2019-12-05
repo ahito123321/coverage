@@ -27,7 +27,10 @@ class Canvas extends Component {
         let ctx = this.canvas.current.getContext('2d');
         this.props.canvasInfo.details.forEach(detail => {
             ctx.fillStyle = this.randomColor();
-            ctx.fillRect(detail.point1.x, detail.point1.y, detail.point2.x - detail.point1.x, detail.point2.y - detail.point1.y);
+            ctx.fillRect(detail.points.topLeft.x, 
+                    detail.points.topLeft.y, 
+                    detail.points.bottomRight.x - detail.points.topLeft.x, 
+                    detail.points.bottomRight.y - detail.points.topLeft.y);
         });
     }
 

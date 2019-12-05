@@ -3,8 +3,8 @@ import initialStore from '../store/initialStore';
 const canvasReducer = (canvas = initialStore.canvas, action) => {
     if (action.type === 'SET_CANVAS') {
         return {
-            width: canvas.width,
-            height: canvas.height
+            width: action.payload.width,
+            height: action.payload.height
         }
     } else {
         return canvas;
