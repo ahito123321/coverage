@@ -43,6 +43,12 @@ const initialStore = {
             amount: '1'
         },
         {
+            id: '8',
+            width: '100',
+            height: '50',
+            amount: '4'
+        },
+        {
             id: '9',
             width: '100',
             height: '50',
@@ -55,20 +61,24 @@ const initialStore = {
             amount: '4'
         },
         {
-            id: '9',
+            id: '11',
             width: '100',
             height: '50',
             amount: '4'
-        },
+        }
     ],
     modalStates: {
         addDetail: false
     },
+    settings: {
+        isAdaptiveCanvas: false,
+        isMultiCanvases: true
+    },
     spinner: false,
     algorithm: '',
     canvas: {
-        width: '1000',
-        height: '800'
+        width: '500',
+        height: '500'
     }
 };
 

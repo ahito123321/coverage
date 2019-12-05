@@ -2,11 +2,11 @@ import React from 'react';
 //material UI
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Spinner from '../components/Spinner';
 //custom
 import CanvasContainer from './CanvasContainer';
 import DetailContainer from './DetailContainer';
 import IncisionContainer from './IncisionContainer';
+import Spinner from '../components/Spinner';
 
 const useStyles = makeStyles(theme => ({
     root: {

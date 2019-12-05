@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FirstSuitable from '../components/algorithms/FirstSuitable';
+import FirstSuitableWithOrdering from '../components/algorithms/FirstSuitableWithOrdering';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -15,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 function IncisionContainer(props) {
     const classes = useStyles();
     const { algorithm } = props;
-    console.log(algorithm);
+    
     return (
         <Paper className={classes.paper}>
             {algorithm === '' && 
@@ -24,6 +25,7 @@ function IncisionContainer(props) {
                 </Typography>
             }
             {algorithm === 'FIRST_SUITABLE' && <FirstSuitable />}
+            {algorithm === 'FIRST_SUITABLE_WITH_ORDERING' && <FirstSuitableWithOrdering />}
         </Paper>
     );
 };

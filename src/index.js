@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './container/App';
+import './index.css';
 
 import { SnackbarProvider } from 'notistack';
 
@@ -15,7 +16,7 @@ const store = createStore(combineReducers(reducers));
 ReactDOM
     .render(
         <Provider store={store}>
-            <SnackbarProvider maxSnack={2}>
+            <SnackbarProvider maxSnack={3}>
                 <App />
             </ SnackbarProvider>
         </Provider>, 

@@ -5,6 +5,8 @@ const algorithmReducer = (algorithm = initialStore.algorithm, action) => {
         return '';
     } else if (action.type === 'FIRST_SUITABLE') {
         return 'FIRST_SUITABLE';
+    } else if (action.type === 'FIRST_SUITABLE_WITH_ORDERING') {
+        return 'FIRST_SUITABLE_WITH_ORDERING';
     } else {
         return algorithm;
     }

@@ -9,7 +9,7 @@ import Canvas from './Canvas';
 import { getTopLeftPointBySizeAndBottomLeftPoint, 
         getBottomRightPointBySizeAndBottomLeftPoint,
         getSuitableDetailsForWidth,
-        getSuitableDetailsForHeight} from './AlgorithmsUtil';
+        getSuitableDetailsForHeight } from './AlgorithmsUtil';
 
 import { withSnackbar } from 'notistack';
 
@@ -22,7 +22,7 @@ const styles  = {
     }
 };
 
-class FirstSuitable extends React.Component {
+class FirstSuitableWithOrdering extends React.Component {
 
     constructor(props) {
         super(props);
@@ -93,7 +93,12 @@ class FirstSuitable extends React.Component {
             factor
         }];
 
-        details.forEach((detail, index) => {
+        details.sort((a, b) => {
+                if (a.width * a.height > b.width * b.height) return -1;
+                if (a.width * a.height < b.width * b.height) return 1;
+                return 0;
+            })
+            .forEach((detail, index) => {
             console.log(`\n[INFO] detail - ${index + 1} | ${detail.id}`);
             console.log(`[INFO] Всего полотен - ${canvases.length}`);
             let isAdded = false;
@@ -328,4 +333,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default withStyles(styles)(connect(mapStateToProps)(withSnackbar(FirstSuitable)));
+export default withStyles(styles)(connect(mapStateToProps)(withSnackbar(FirstSuitableWithOrdering)));
