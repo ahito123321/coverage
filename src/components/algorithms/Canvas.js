@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // material UI
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 const styles = {
     root: {
@@ -90,15 +91,15 @@ class Canvas extends Component {
 
         return (
             <div className={classes.root}>
-                <div>
+                <Typography component="div" variant="subtitle2">
                     Площадь деталей: {detailsSquare}
-                </div>
-                <div>
+                </Typography>
+                <Typography component="div" variant="subtitle2">
                     Общая площадь: {totalSquare} | {totalSquareMin}
-                </div>
-                <div>
+                </Typography>
+                <Typography component="div" variant="subtitle2">
                     Остатки: {totalSquare - detailsSquare} | {totalSquareMin - detailsSquare}
-                </div>
+                </Typography>
                 <canvas className={classes.canvas} width={canvasInfo.width} height={canvasInfo.height} ref={this.canvas}></canvas>
             </div>
         );

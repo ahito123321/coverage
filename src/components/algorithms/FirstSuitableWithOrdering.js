@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 //custom 
 import Canvas from './Canvas';
+import BadDetails from './BadDetails';
 //utils
 import { getTopLeftPointBySizeAndBottomLeftPoint, 
         getBottomRightPointBySizeAndBottomLeftPoint,
@@ -287,7 +288,8 @@ class FirstSuitableWithOrdering extends React.Component {
         
         this.setState({
             ...this.state,
-            canvases: canvases
+            canvases: canvases,
+            badDetails: badDetails
         }, () => {
             this.props.dispatch({
                 type: 'CLOSE_SPINNER'
@@ -309,11 +311,12 @@ class FirstSuitableWithOrdering extends React.Component {
     );
 
     render() {
-        const { canvases } = this.state;
+        const { canvases, badDetails } = this.state;
 
         return (
             <>
                 <div ref={this.container}>
+                    <BadDetails badDetails={badDetails} />
                     {canvases.map((canvas, index) => {
                         return (
                             <Canvas canvasInfo={canvas} key={index} />
